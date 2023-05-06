@@ -1,0 +1,23 @@
+{
+  "name": "nelsonchess",
+  "version": "1.0.0",
+  "description": "Everything you love about chess combined with everything you love about Nelson.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "chess",
+    "nelson"
+  ],
+  "author": "Wilson Kong",
+  "license": "ISC",
+  "dependencies": {
+    "@chrisoakman/chessboardjs": "^1.0.0",
+    "chess.js": "^1.0.0-beta.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
+  }
+}
