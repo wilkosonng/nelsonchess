@@ -10,7 +10,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Defines a MongoDB client
-const uri = `mongodb + srv://${process.env.MONGO_UN}:${process.env.MONGO_PASS}@cluster0.wvflvd2.mongodb.net/?retryWrites=true&w=majority`
+const uri = `mongodb+srv://${process.env.MONGO_UN}:${process.env.MONGO_PASS}@cluster0.wvflvd2.mongodb.net/?retryWrites=true&w=majority`
 const client = new MongoClient(uri, {
 	serverApi: {
 		version: ServerApiVersion.v1,
@@ -18,6 +18,11 @@ const client = new MongoClient(uri, {
 		deprecationErrors: true,
 	}
 });
+
+// Defines static files
+
+app.use(express.static(path.join(__dirname, 'sources')));
+
 
 // Attempts to connect to Atlas
 async () => {
@@ -33,7 +38,7 @@ async () => {
 };
 
 // Gets a reference to the collection.
-const applicants = client.db('Cluster0').collection('applicants');
+const db = client.db('Cluster0');
 
 // Resolves template folder path
 const templates = path.resolve(__dirname, 'templates');
@@ -53,65 +58,6 @@ const portNumber = process.argv[2];
 // Adds request handlers
 app.get('/', (req, res) => {
 	res.render(path.resolve(templates, 'index.ejs'));
-});
-
-app.get('/apply', (req, res) => {
-	res.render(path.resolve(templates, 'apply.ejs'));
-});
-
-app.post('/processApplication', async (req, res) => {
-	const { name, email, gpa, backgroundInfo } = req.body;
-	const document = {
-		name: name,
-		email: email,
-		gpa: parseFloat(gpa),
-		backgroundInfo: backgroundInfo
-	};
-
-	const mongoRes = await applicants.insertOne(document);
-	if (mongoRes.acknowledged) {
-		res.render(path.resolve(templates, 'processApplication.ejs'), { ...document, timestamp: new Date() });
-		return;
-	}
-
-	res.send('Oops. Something went wrong on our end. Try again!')
-});
-
-app.get('/reviewApplication', (req, res) => {
-	res.render(path.resolve(templates, 'reviewApplication.ejs'));
-});
-
-app.post('/processReviewApplication', async (req, res) => {
-	const email = req.body.email;
-	const document = await applicants.findOne({ email: email });
-
-	if (document) {
-		res.render(path.resolve(templates, 'processApplication.ejs'), { ...document, timestamp: new Date() });
-		return;
-	}
-
-	res.send(`Oops! Could not find the requested email address in our database! Please <a href="/apply">apply!</a>`);
-});
-
-app.get('/selectByGPA', (req, res) => {
-	res.render(path.resolve(templates, 'selectByGPA.ejs'));
-});
-
-app.post('/processGPA', async (req, res) => {
-	const gpa = parseFloat(req.body.gpa);
-	const matches = (await (await applicants.find({ gpa: { $gte: gpa } })).toArray());
-
-	res.render(path.resolve(templates, 'processGPA.ejs'), { rows: matches.reduce((a, e) => a += `<tr><td>${e.name}</td><td>${e.gpa}</td></tr>`, '') });
-});
-
-app.get('/removeAllApplications', (req, res) => {
-	res.render(path.resolve(templates, 'removeAllApplications.ejs'));
-});
-
-app.post('/processRemove', async (req, res) => {
-	const numRemoved = (await applicants.deleteMany({})).deletedCount;
-
-	res.render(path.resolve(templates, 'processRemove.ejs'), { numRemoved: numRemoved });
 });
 
 app.listen(portNumber);
