@@ -1,6 +1,8 @@
 let board;
 let game = new Chess();
+const nelsonRandom2 = new Audio('/aud/nelson_random2.mp3');
 
+// Creates a new chess board.
 board = Chessboard('board', {
 	position: 'start',
 	pieceTheme: '/img/chesspieces/nelsonchess/{piece}.png'
@@ -15,6 +17,7 @@ function makeRandomMoves() {
 		setTimeout(() => {
 			game = new Chess();
 			board.position(game.fen());
+			nelsonRandom2.play();
 			makeRandomMoves();
 		}, 2000);
 

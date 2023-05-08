@@ -3,11 +3,17 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const { Chessboard } = require('@chrisoakman/chessboardjs');
+const { Chess } = require('chess.js');
+const { WebSocketServer } = require('ws');
 require('dotenv').config();
 
 // Defines an express application and adds the body parser middleware
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// Defines a new web socket server on the same port
+const socketServer = new WebSocketServer({ server: app });
 
 // Defines static files
 app.use(express.static(path.join(__dirname, 'sources')));
