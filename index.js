@@ -9,6 +9,9 @@ require('dotenv').config();
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// Defines static files
+app.use(express.static(path.join(__dirname, 'sources')));
+
 // Defines a MongoDB client
 const uri = `mongodb+srv://${process.env.MONGO_UN}:${process.env.MONGO_PASS}@cluster0.wvflvd2.mongodb.net/?retryWrites=true&w=majority`
 const client = new MongoClient(uri, {
@@ -19,10 +22,8 @@ const client = new MongoClient(uri, {
 	}
 });
 
-// Defines static files
-
-app.use(express.static(path.join(__dirname, 'sources')));
-
+process.stdin.setEncoding('utf8');
+const templates = path.resolve(__dirname, 'templates');
 
 // Attempts to connect to Atlas
 async () => {
@@ -37,14 +38,8 @@ async () => {
 	}
 };
 
-// Gets a reference to the collection.
+
 const db = client.db('Cluster0');
-
-// Resolves template folder path
-const templates = path.resolve(__dirname, 'templates');
-
-// Sets standard input stream encoding
-process.stdin.setEncoding('utf8');
 
 // Asserts argument length is correct
 if (process.argv.length != 3) {
@@ -52,19 +47,30 @@ if (process.argv.length != 3) {
 	process.exit(1);
 }
 
-// Loads the argument as port number
 const portNumber = process.argv[2];
+const games = new Map();
 
 // Adds request handlers
 app.get('/', (req, res) => {
 	res.render(path.resolve(templates, 'index.ejs'));
 });
 
+app.get('/play', (req, res) => {
+	res.render(path.resolve(templates, 'play.ejs'));
+});
+
+app.get('/review', (req, res) => {
+	res.render(path.resolve(templates, 'review.ejs'));
+});
+
+app.get('/about', (req, res) => {
+	res.render(path.resolve(templates, 'about.ejs'));
+});
+
 app.listen(portNumber);
 console.log(`Web server is running at http://localhost:${portNumber}`);
 
 // Implements command line interpreter
-
 const prompt = "Stop to shut down the server: ";
 
 process.stdout.write(prompt);
@@ -83,7 +89,6 @@ process.stdin.on("readable", function () {
 });
 
 // Makes sure application logs out in case of what we call an "oopsie"
-
 process.on('uncaughtException', (error) => {
 	console.error(error);
 	process.exit(1);

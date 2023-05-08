@@ -2,13 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Nelsonchess</title>
-    <link rel="stylesheet" href="style.css" />
+    <%- include('fonts'); -%>
+    <title>Review | Nelsonchess</title>
+    <link rel="stylesheet" href="/style/default.css" />
   </head>
 
   <body>
-    <% header.ejs %>
-    
-    <% footer.ejs %>
+    <%- include('header'); -%>
+    <div class="main"></div>
+    <%- include('footer'); -%>
   </body>
 </html>

@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <title>Nelsonchess</title>
     <%- include('fonts'); -%>
-    <link rel="stylesheet" href="/style/default.css" type="text/css"/>
+    <link rel="stylesheet" href="/style/default.css" type="text/css" />
+    <script type="module" src="/js/randomBoard.js" defer></script>
   </head>
 
   <body>
     <%- include('header'); -%>
-
-    <%- include('footer'); -%>
+    <div class="main">
+      <h1>Welcome to Nelsonchess!</h1>
+      <%- include('board'); -%>
+    </div>
+    <%- include('footer'); -%> <%- include('chess'); -%>
   </body>
 </html>
