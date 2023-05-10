@@ -35,7 +35,7 @@ function makeRandomMoves() {
 	board.position(game.fen());
 	highlightCheck();
 
-	setTimeout(makeRandomMoves, 50);
+	setTimeout(makeRandomMoves, 800);
 }
 
 // Removes all red highlights due to checks.
@@ -47,10 +47,8 @@ function clearChecks() {
 function highlightCheck() {
 	if (game.in_check()) {
 		if (game.turn() === 'w') {
-			console.log($('img[data-piece = "wK"]'));
 			$('img[data-piece = "wK"]').addClass('highlight-check');
 		} else {
-			console.log($('img[data-piece = "bK"]'));
 			$('img[data-piece = "bK"]').addClass('highlight-check');
 		}
 	}

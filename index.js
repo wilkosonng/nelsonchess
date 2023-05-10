@@ -44,7 +44,6 @@ async () => {
 	}
 };
 
-
 const collection = client.db('Cluster0').collection('Games');
 
 // Asserts argument length is correct
@@ -55,6 +54,7 @@ if (process.argv.length != 3) {
 
 const portNumber = process.argv[2];
 const validChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+// Map of ongoing games: ID -> Game: { w: player, b: player, obj: Chess() }
 const games = new Map();
 
 // Adds request handlers
@@ -66,9 +66,46 @@ app.get('/play', (req, res) => {
 	res.render(path.resolve(templates, 'play.ejs'));
 });
 
-app.post('/playRequest/:type', (req, res) => {
-	const type = 
-	res.redirect(`/game/${a}/${a}`);
+app.post('/playRequest/:type', async (req, res) => {
+	const type = req.params.type;
+	
+	if (type === 'create') {
+		let { color } = req.body;
+
+		if (color === 'random') {
+			color = Math.random() < 0.5 ? 'black' : 'white';
+		}
+
+		if (color !== 'black' && color !== 'white') {
+			return res.send('Oops! Something went terribly wrong (invalid color)!');
+		}
+
+		const id = await genID();
+		games.set(id, { w: undefined, b: undefined, game: new Chess() })
+		return res.redirect(`/game/${id}/${color === 'black' ? 'b' : 'w'}`);
+	} else if (type === 'join') {
+		const { id } = req.body;
+		const res = games.get(id);
+		if (res != null) {
+			if (res.w == null) {
+				return res.redirect(`/game/${id}/w`);
+			} else if (res.b == null) {
+				return res.redirect(`/game/${id}/b`);
+			} else {
+				return res.send(`Oops! The lobby you're trying to join seems to be full! Try creating your own game!`);
+			}
+		} else {
+			return res.send(`Oops! Couldn't find the lobby! Try double-checking your ID or creating a game!`);
+		}
+	} else {
+		console.log('Create not defined.')
+		return res.send('Oops! Something went terribly wrong (invalid type)!');
+	}
+});
+
+app.get('/game/:id/:color', (req, res) => {
+	const { id, color } = req.params;
+	res.send(`Request receieved from ${id} ${color}`)
 });
 
 app.get('/review', (req, res) => {
@@ -119,12 +156,14 @@ process.on('exit', async () => {
 // TODO: Bloom filter mayhaps?
 async function genID() {
 	let id = '';
-	for (let i; i < 8; i++) {
-		ans += validChars[Math.random() * validChars.length() << 0];
+	for (let i = 0; i < 8; i++) {
+		id += validChars[Math.random() * validChars.length << 0];
 	}
 
-	const res = await collection.findOne( {id: id} );
-	if (res != null) {
+	const res = await collection.findOne({ id: id });
+	if (res != null || Array.from(games.keys()).some(e => e.id === id)) {
 		return genID();
 	}
+
+	return id;
 }

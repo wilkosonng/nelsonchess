@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Nelsonchess</title>
-    <%- include('fonts'); -%>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Nelsonchess</title>
+  <%- include('fonts'); -%>
     <link rel="stylesheet" href="/style/default.css" type="text/css" />
     <script type="module" src="/js/randomBoard.js" defer></script>
-  </head>
+</head>
 
-  <body>
-    <%- include('header'); -%>
+<body>
+  <%- include('header'); -%>
     <div class="main">
       <div class="center">
         <h1>Welcome to Nelsonchess!</h1>
@@ -22,10 +23,11 @@
           <li>To view a game played, select the review button.</li>
           <li>To learn more about Nelsonchess, select the about button.</li>
         </ul>
+        <br>
+        <%- include('board'); -%>
       </div>
-      <br/>
-    </div>
-    <%- include('board'); -%> <%- include('footer'); -%> <%- include('chess');
-    -%>
-  </body>
+      <br />
+    </div> <%- include('footer'); -%> <%- include('chess'); -%>
+</body>
+
 </html>

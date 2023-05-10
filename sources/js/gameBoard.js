@@ -46,10 +46,8 @@ function clearChecks() {
 function highlightCheck() {
 	if (game.in_check()) {
 		if (game.turn() === 'w') {
-			console.log($('img[data-piece = "wK"]'));
 			$('img[data-piece = "wK"]').addClass('highlight-check');
 		} else {
-			console.log($('img[data-piece = "bK"]'));
 			$('img[data-piece = "bK"]').addClass('highlight-check');
 		}
 	}
