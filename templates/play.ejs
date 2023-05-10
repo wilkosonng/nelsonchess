@@ -1,23 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Play | Nelsonchess</title>
-    <%- include('fonts'); -%>
-    <link rel="stylesheet" href="/style/default.css" />
-  </head>
 
-  <body>
-    <%- include('header'); -%>
+<head>
+  <meta charset="utf-8" />
+  <title>Play | Nelsonchess</title>
+  <%- include('fonts'); -%>
+    <link rel="stylesheet" href="/style/default.css" />
+</head>
+
+<body>
+  <%- include('header'); -%>
     <div class="main">
       <div class="center">
-        <form action="/playRequest" method="get">
+        <form action="/playRequest/create" method="post">
           <fieldset>
-            
+            <h2>Create a Game</h1>
+            <h3>Select a Color</h3>
+            <input id="white" name="color" type="radio" value="white">
+            <label for="white">White</label>
+            <input id="black" name="color" type="radio" value="black">
+            <label for="black">Black</label>
+            <input id="random" name="color" type="radio" value="random" checked>
+            <label for="random">Random</label>
           </fieldset>
         </form>
+        <br>
+        <form action="/playRequest/join" method="post">
+          <fieldset>
+
+          </fieldset>
       </div>
     </div>
     <%- include('footer'); -%>
-  </body>
+</body>
+
 </html>

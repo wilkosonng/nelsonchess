@@ -1,36 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <%- include('fonts'); -%>
-    <title>About | Nelsonchess</title>
-    <link rel="stylesheet" href="/style/default.css" />
-  </head>
 
-  <body>
-    <%- include('header'); -%>
-    <div class="main">
-      <div class="center">
-        <h1>About Us</h1>
-        Unlike other <a href="https://chess.com">chess </a
-        ><a href="https://lichess.org">sites</a> that prioritize that strive for
-        the best user experience, we at Nelsonchess believe that lower latency,
-        rich features such as premoves and a large opening database don't define
-        the enjoyment users have. Instead, our core belief is that all you need
-        is Nelson to be satisfied.
-        <h2>Technologies Used</h2>
-		<ul>
-			<li><strong>Built-in Audio API</strong> - Used for playing Nelson's beautiful voice (as well as other sound effects)</li>
-			<li><strong>Built-in Websocket API</strong> - Used to facilitate a realtime gameplay experience via two-way connection between users and the server.</li>
-			<li><strong>Chess.js</strong></li>
-			<li><strong>Chessboard.js</strong></li>
-			<li><strong>Express</strong></li>
-			<li><strong>MongoDB</strong></li>
-			<li><strong>Node.js</strong></li>
-			<li><strong>Websocketsnp</strong></li>
-		</ul>
-      </div>
-    </div>
-    <%- include('footer'); -%>
-  </body>
+<head>
+	<meta charset="utf-8" />
+	<%- include('fonts'); -%>
+		<title>About | Nelsonchess</title>
+		<link rel="stylesheet" href="/style/default.css" />
+</head>
+
+<body>
+	<%- include('header'); -%>
+		<div class="main">
+			<div class="center">
+				<h1>About Us</h1>
+				Unlike other <a href="https://chess.com">chess </a><a href="https://lichess.org">sites</a> that
+				prioritize that strive for
+				the best user experience, we at Nelsonchess believe that lower latency,
+				rich features such as premoves or a myriad of study resources don't
+				define the enjoyment users have. Instead, our core belief is that all
+				you need is Nelson to be satisfied.
+				<h2>Technologies Used</h2>
+				<ul>
+					<li>
+						<strong><a
+								href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement/Audio">Built-in
+								Audio API</a></strong>
+						- Playing Nelson's beautiful voice (as well as other sound effects).
+					</li>
+					<li>
+						<strong><a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSocket">Built-in Websocket
+								API</a></strong>
+						- Facilitates a realtime gameplay experience via two-way
+						connection between users and the server.
+					</li>
+					<li>
+						<strong><a href="https://github.com/jhlywa/chess.js">Chess.js</a></strong> - The actual game
+						logic behind the chess games.
+					</li>
+					<li>
+						<strong><a href="https://github.com/oakmac/chessboardjs">Chessboard.js</a></strong> - The GUI
+						side of the chess board.
+					</li>
+					<li>
+						<strong><a href="https://expressjs.com/">Express</a></strong> - An abstraction layer on top of
+						node that makes it less verbose to handle requests and add middleware.
+					</li>
+					<li>
+						<strong><a href="https://lichess.org/api">Lichess API</a></strong> - An amazing chess API that
+						you can query for games, openings, and more!
+					</li>
+					<li>
+						<strong><a href="https://mongodb.github.io/node-mongodb-native/">MongoDB</a></strong> - A
+						backend NoSQL database used to store completed games.
+					</li>
+					<li>
+						<strong><a href="https://nodejs.org/en">Node.js</a></strong> - Server-side runtime
+							framework that provides the backbone for delivering your Nelson
+							goodness.
+					</li>
+					<li>
+						<strong><a href="https://github.com/websockets/ws">Websockets</a></strong> -
+							Server-side implementation of websockets. Allows you to send and
+							receive chess moves that may disappoint Nelson without refreshing
+							the page!
+					</li>
+				</ul>
+			</div>
+		</div>
+		<%- include('footer'); -%>
+</body>
+
 </html>

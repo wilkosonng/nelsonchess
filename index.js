@@ -44,7 +44,7 @@ async () => {
 };
 
 
-const db = client.db('Cluster0');
+const collection = client.db('Cluster0').collection('Games');
 
 // Asserts argument length is correct
 if (process.argv.length != 3) {
@@ -62,6 +62,11 @@ app.get('/', (req, res) => {
 
 app.get('/play', (req, res) => {
 	res.render(path.resolve(templates, 'play.ejs'));
+});
+
+app.post('/playRequest/:type', (req, res) => {
+	const type = 
+	res.redirect(`/game/${a}/${a}`);
 });
 
 app.get('/review', (req, res) => {
@@ -107,3 +112,15 @@ process.on('exit', async () => {
 	console.log('Shutting down the server');
 	await client.close();
 });
+
+function genID() {
+	const validChars = '';
+	let ans = '';
+	for (let i; i < 8; i++) {
+		ans += validChars[Math.round(Math.random() * validChars.length())];
+	}
+
+	try {
+		collection.
+	}
+}
