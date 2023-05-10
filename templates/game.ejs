@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Game | Nelsonchess</title>
+	<%- include('fonts'); -%>
+		<link rel="stylesheet" href="/style/default.css" type="text/css" />
+		<script type="module" src="/js/randomBoard.js" defer></script>
+</head>
+
+<body>
+	<%- include('header'); -%>
+		<div class="main">
+			<div class="center">
+				Opponent
+
+				<br>
+				<%- include('board'); -%>
+				<br>
+
+				You
+			</div>
+			<br/>
+		</div> <%- include('footer'); -%> <%- include('chess'); -%>
+</body>
+
+</html>
