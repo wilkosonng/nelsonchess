@@ -12,6 +12,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Defines a new web socket server on the same port
+// TODO: handle WSS handlers
 const socketServer = new WebSocketServer({ server: app });
 
 // Defines static files
@@ -53,6 +54,7 @@ if (process.argv.length != 3) {
 }
 
 const portNumber = process.argv[2];
+const validChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 const games = new Map();
 
 // Adds request handlers
@@ -113,14 +115,16 @@ process.on('exit', async () => {
 	await client.close();
 });
 
-function genID() {
-	const validChars = '';
-	let ans = '';
+// Generates a unique game ID
+// TODO: Bloom filter mayhaps?
+async function genID() {
+	let id = '';
 	for (let i; i < 8; i++) {
-		ans += validChars[Math.round(Math.random() * validChars.length())];
+		ans += validChars[Math.random() * validChars.length() << 0];
 	}
 
-	try {
-		collection.
+	const res = await collection.findOne( {id: id} );
+	if (res != null) {
+		return genID();
 	}
 }

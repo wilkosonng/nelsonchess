@@ -12,46 +12,45 @@ board = Chessboard('board', {
 	pieceTheme: '/img/chesspieces/nelsonchess/{piece}.png'
 });
 
-makeRandomMoves();
+// function makeRandomMoves() {
+// 	// Cleans up board of highlights
+// 	clearChecks();
 
-function makeRandomMoves() {
-	// Cleans up board of highlights
-	clearChecks();
+// 	var possibleMoves = game.moves();
 
-	var possibleMoves = game.moves();
+// 	if (game.game_over()) {
+// 		// Game is over? Starts a new game after ~ 2 seconds.
+// 		setTimeout(() => {
+// 			game = new Chess();
+// 			board.position(game.fen());
+// 			nelsonRandom2.play();
+// 			makeRandomMoves();
+// 		}, 2000);
 
-	if (game.game_over()) {
-		// Game is over? Starts a new game after ~ 2 seconds.
-		setTimeout(() => {
-			game = new Chess();
-			board.position(game.fen());
-			nelsonRandom2.play();
-			makeRandomMoves();
-		}, 2000);
+// 		return;
+// 	}
 
-		return;
-	}
+// 	game.move(possibleMoves[Math.floor(Math.random() * possibleMoves.length)]);
+// 	board.position(game.fen());
+// 	highlightCheck();
 
-	game.move(possibleMoves[Math.floor(Math.random() * possibleMoves.length)]);
-	board.position(game.fen());
-	highlightCheck();
-
-	setTimeout(makeRandomMoves, 800);
-}
+// 	setTimeout(makeRandomMoves, 200);
+// }
 
 // Removes all red highlights due to checks.
 function clearChecks() {
-	$('#board').find('.' + squareClass).removeClass('highlight-check');
+	$board.find('.' + pieceClass).removeClass('highlight-check');
 }
 
 // Checks if the king is in check. If it is, then highlights the square in red.
 function highlightCheck() {
 	if (game.in_check()) {
-		const color = game.turn();
-		if (color === 'w') {
-			$('img[data-piece = "wK"]').parent().addClass('highlight-check');
+		if (game.turn() === 'w') {
+			console.log($('img[data-piece = "wK"]'));
+			$('img[data-piece = "wK"]').addClass('highlight-check');
 		} else {
-			$('img[data-piece = "bK"]').parent().addClass('highlight-check');
+			console.log($('img[data-piece = "bK"]'));
+			$('img[data-piece = "bK"]').addClass('highlight-check');
 		}
 	}
 }

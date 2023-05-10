@@ -1,6 +1,8 @@
 let board;
+const $board = $('#board');
 let game = new Chess();
 const squareClass = 'square-55d63';
+const pieceClass = 'piece-417db';
 const nelsonRandom2 = new Audio('/aud/nelson_random2.mp3');
 
 // Creates a new chess board.
@@ -33,22 +35,23 @@ function makeRandomMoves() {
 	board.position(game.fen());
 	highlightCheck();
 
-	setTimeout(makeRandomMoves, 800);
+	setTimeout(makeRandomMoves, 50);
 }
 
 // Removes all red highlights due to checks.
 function clearChecks() {
-	$('#board').find('.' + squareClass).removeClass('highlight-check');
+	$board.find('.' + pieceClass).removeClass('highlight-check');
 }
 
 // Checks if the king is in check. If it is, then highlights the square in red.
 function highlightCheck() {
 	if (game.in_check()) {
-		const color = game.turn();
-		if (color === 'w') {
-			$('img[data-piece = "wK"]').parent().addClass('highlight-check');
+		if (game.turn() === 'w') {
+			console.log($('img[data-piece = "wK"]'));
+			$('img[data-piece = "wK"]').addClass('highlight-check');
 		} else {
-			$('img[data-piece = "bK"]').parent().addClass('highlight-check');
+			console.log($('img[data-piece = "bK"]'));
+			$('img[data-piece = "bK"]').addClass('highlight-check');
 		}
 	}
 }
