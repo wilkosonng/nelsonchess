@@ -1,4 +1,5 @@
 /*! chessboard.js v1.0.0 | (c) 2019 Chris Oakman | MIT License chessboardjs.com/license */
+/*  Largely adapted from chessboard.js default CSS. */
 .clearfix-7da63 {
 	clear: both
 }
@@ -32,6 +33,18 @@
 .highlight1-32417,
 .highlight2-9c5d2 {
 	box-shadow: inset 0 0 3px 3px rgb(255, 133, 117);
+}
+
+.highlight-white {
+	box-shadow: inset 0 0 3px 3px rgba(148, 148, 216, 0.5);
+}
+
+.highlight-black {
+	box-shadow: inset 0 0 3px 3px rgba(148, 148, 216, 0.5);
+}
+
+.highlight-check {
+	box-shadow: inset 0 0 3px 3px rgba(216, 23, 65, 0.5);
 }
 
 .notation-322f9 {

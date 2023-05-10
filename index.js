@@ -3,7 +3,6 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const { Chessboard } = require('@chrisoakman/chessboardjs');
 const { Chess } = require('chess.js');
 const { WebSocketServer } = require('ws');
 require('dotenv').config();

@@ -9,7 +9,28 @@
 
   <body>
     <%- include('header'); -%>
-    <div class="main"></div>
+    <div class="main">
+      <div class="center">
+        <h1>About Us</h1>
+        Unlike other <a href="https://chess.com">chess </a
+        ><a href="https://lichess.org">sites</a> that prioritize that strive for
+        the best user experience, we at Nelsonchess believe that lower latency,
+        rich features such as premoves and a large opening database don't define
+        the enjoyment users have. Instead, our core belief is that all you need
+        is Nelson to be satisfied.
+        <h2>Technologies Used</h2>
+		<ul>
+			<li><strong>Built-in Audio API</strong> - Used for playing Nelson's beautiful voice (as well as other sound effects)</li>
+			<li><strong>Built-in Websocket API</strong> - Used to facilitate a realtime gameplay experience via two-way connection between users and the server.</li>
+			<li><strong>Chess.js</strong></li>
+			<li><strong>Chessboard.js</strong></li>
+			<li><strong>Express</strong></li>
+			<li><strong>MongoDB</strong></li>
+			<li><strong>Node.js</strong></li>
+			<li><strong>Websocketsnp</strong></li>
+		</ul>
+      </div>
+    </div>
     <%- include('footer'); -%>
   </body>
 </html>
