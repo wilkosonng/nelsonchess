@@ -137,4 +137,4 @@ config.json
 
 # testing
 
-testing.js
+templates/test.ejs

@@ -18,18 +18,18 @@ fieldset {
 	background-color: #444444;
 	border: 4px solid #222222;
 	border-radius: 1rem;
-	min-width: 300px;
+	min-width: 400px;
 }
 
 .main {
 	margin: 1%;
-	min-width: 400px;
+	min-width: 600px;
 	display: flex;
 	justify-content: center;
 }
 
 .center {
-	max-width: 500px;
+	width: 500px;
 }
 
 h1 {
@@ -100,4 +100,6 @@ h2 {
 
 #board {
 	margin: auto;
+	min-width: 400px;
+	max-width: 450px;
 }

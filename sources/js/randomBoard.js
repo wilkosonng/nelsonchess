@@ -14,10 +14,7 @@ board = Chessboard('board', {
 makeRandomMoves();
 
 function makeRandomMoves() {
-	// Cleans up board of highlights
-	clearChecks();
-
-	var possibleMoves = game.moves();
+	const possibleMoves = game.moves();
 
 	if (game.game_over()) {
 		// Game is over? Starts a new game after ~ 2 seconds.
@@ -40,16 +37,23 @@ function makeRandomMoves() {
 
 // Removes all red highlights due to checks.
 function clearChecks() {
-	$board.find('.' + pieceClass).removeClass('highlight-check');
+	$(`.${squareClass}`).removeClass('highlight-check');
 }
 
 // Checks if the king is in check. If it is, then highlights the square in red.
 function highlightCheck() {
+	clearChecks();
 	if (game.in_check()) {
 		if (game.turn() === 'w') {
-			$('img[data-piece = "wK"]').addClass('highlight-check');
+			$('#board')
+				.find(`.${squareClass} > img[data-piece = "wK"]`)
+				.parent()
+				.addClass('highlight-check');
 		} else {
-			$('img[data-piece = "bK"]').addClass('highlight-check');
+			$('#board')
+				.find(`.${squareClass} > img[data-piece = "bK"]`)
+				.parent()
+				.addClass('highlight-check');
 		}
 	}
 }

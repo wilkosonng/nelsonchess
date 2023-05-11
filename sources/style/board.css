@@ -32,15 +32,11 @@
 
 .highlight1-32417,
 .highlight2-9c5d2 {
-	box-shadow: inset 0 0 3px 3px rgb(255, 133, 117);
+	box-shadow: inset 0 0 3px 3px rgba(115, 255, 250, 0.65);
 }
 
-.highlight-white {
-	box-shadow: inset 0 0 3px 3px rgba(148, 148, 216, 0.5);
-}
-
-.highlight-black {
-	box-shadow: inset 0 0 3px 3px rgba(148, 148, 216, 0.5);
+.highlight-move {
+	box-shadow: inset 0 0 3px 3px rgba(115, 255, 250, 0.65);
 }
 
 .highlight-check {
