@@ -47,8 +47,10 @@ ws.onopen = () => {
 ws.onmessage = (data) => {
 	const msg = JSON.parse(data);
 
-	if (data.type === 'ready') {
+	if (msg.type === 'ready') {
 		ready = true;
+	} else if (msg.type === 'move') {
+		// TODO: Implement move
 	}
 };
 
@@ -149,6 +151,10 @@ function onDrop(source, target) {
 }
 
 function onMouseoverSquare(square, piece) {
+	if (!ready) {
+		return;
+	}
+
 	const moves = game.moves({
 		square: square,
 		verbose: true

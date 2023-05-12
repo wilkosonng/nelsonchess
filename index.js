@@ -20,6 +20,7 @@ const wss = new WebSocketServer({ server: server });
 // Map of color id pairs: ws -> { color: (b|w), id: id }
 const games = new Map();
 const info = new Map();
+const portNumber = 5000;
 
 wss.on('connection', (ws, req) => {
 	/* WS Message Structure:
@@ -98,14 +99,6 @@ async () => {
 
 const collection = client.db('Cluster0').collection('Games');
 
-// Asserts argument length is correct
-if (process.argv.length != 3) {
-	process.stdout.write('Usage summerCamp.js portNumber');
-	process.exit(1);
-}
-
-const portNumber = process.argv[2];
-
 // Adds request handlers
 app.get('/', (req, res) => {
 	res.render(path.resolve(templates, 'index.ejs'));
@@ -178,14 +171,8 @@ app.get('/test', (req, res) => {
 	res.render(path.resolve(templates, 'test.ejs'));
 });
 
-server.listen(portNumber, () => {
-	console.log(`Web server is running at http://localhost:${portNumber}`);
-});
-
 // Implements command line interpreter
-const prompt = "Stop to shut down the server: ";
 
-process.stdout.write(prompt);
 process.stdin.on("readable", function () {
 	let dataInput = process.stdin.read();
 	if (dataInput !== null) {
@@ -193,11 +180,16 @@ process.stdin.on("readable", function () {
 		if (command === 'stop') {
 			process.exit(0);
 		} else {
-			process.stdout.write(`Invalid command: ${command}\n`);
+			process.stdout.write(`Command not recognized: ${command}\n`);
 		}
-		process.stdout.write(prompt);
+		process.stdout.write('> ');
 		process.stdin.resume();
 	}
+});
+
+server.listen(portNumber, () => {
+	console.log(`Web server is running at http://localhost:${portNumber}`);
+	process.stdout.write('> ');
 });
 
 // Makes sure application logs out in case of what we call an "oopsie"
