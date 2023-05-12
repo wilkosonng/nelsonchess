@@ -38,9 +38,10 @@ try {
 		pieceTheme: '/img/chesspieces/nelsonchess/{piece}.png'
 	});
 
-	ws = new WebSocket('ws://localhost:5000');
+	ws = new WebSocket(`ws://${window.location.host}`);
 
 	ws.onopen = () => {
+		console.log('OPEN');
 		ws.send(JSON.stringify(
 			{
 				type: 'start',
@@ -143,7 +144,7 @@ function onDragStart(source, piece) {
 	}
 
 	if (game.turn() != color) {
-		return;
+		return false;
 	}
 
 	if (game.game_over()) {
