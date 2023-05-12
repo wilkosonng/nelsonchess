@@ -38,7 +38,7 @@ try {
 		pieceTheme: '/img/chesspieces/nelsonchess/{piece}.png'
 	});
 
-	ws = new WebSocket(`ws://${window.location.host}`);
+	ws = new WebSocket(`wss://${window.location.host}`);
 
 	ws.onopen = () => {
 		console.log('OPEN');
