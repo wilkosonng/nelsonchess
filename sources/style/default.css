@@ -42,6 +42,25 @@ h2 {
 	text-align: center;
 }
 
+h3 {
+	font-size: 1.5rem;
+}
+
+label {
+	font-size: 1.3rem;
+}
+
+/*
+ * TODO: Possibly implement custom radio buttons.
+ */
+ 
+input[type="radio"] {
+	accent-color: #222222;
+	width: 1.5rem;
+	height: 1.5rem;
+	border: 0;
+}
+
 .topNavBar {
 	list-style-type: none;
 	margin: 0;

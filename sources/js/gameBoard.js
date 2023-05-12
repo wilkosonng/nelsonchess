@@ -1,4 +1,5 @@
 let board;
+let ws;
 let ready = false;
 let game = new Chess();
 const $board = $('#board');
@@ -18,41 +19,60 @@ const match = (window.location.pathname).match(/\/(?<id>[a-zA-Z0-9]{8})\/(?<colo
 const id = match?.groups?.id;
 const color = match?.groups?.color;
 
-
-// Creates a new chess board.
-board = Chessboard('board', {
-	position: 'start',
-	draggable: true,
-	onDragStart: onDragStart,
-	onDrop: onDrop,
-	onMouseoutSquare: onMouseoutSquare,
-	onMouseoverSquare: onMouseoverSquare,
-	onSnapEnd: onSnapEnd,
-	pieceTheme: '/img/chesspieces/nelsonchess/{piece}.png'
-});
-
-const ws = new WebSocket('ws://localhost:5000');
-
-ws.onopen = () => {
-	console.log('Open websocket');
-	ws.send(JSON.stringify(
-		{
-			type: 'start',
-			id: id,
-			color: color,
-			data: null
-		}));
-};
-
-ws.onmessage = (data) => {
-	const msg = JSON.parse(data);
-
-	if (msg.type === 'ready') {
-		ready = true;
-	} else if (msg.type === 'move') {
-		// TODO: Implement move
+try {
+	if (id == null || color == null) {
+		$board.innerHTML = 'Invalid ID or color';
+		throw new Error('Invalid ID or color');
 	}
-};
+
+	// Creates a new chess board.
+	board = Chessboard('board', {
+		position: 'start',
+		orientation: color === 'b' ? 'black' : 'white',
+		draggable: true,
+		onDragStart: onDragStart,
+		onDrop: onDrop,
+		onMouseoutSquare: onMouseoutSquare,
+		onMouseoverSquare: onMouseoverSquare,
+		onSnapEnd: onSnapEnd,
+		pieceTheme: '/img/chesspieces/nelsonchess/{piece}.png'
+	});
+
+	ws = new WebSocket('ws://localhost:5000');
+
+	ws.onopen = () => {
+		ws.send(JSON.stringify(
+			{
+				type: 'start',
+				id: id,
+				color: color,
+				data: null
+			}));
+	};
+
+	ws.onmessage = (data) => {
+		const msg = JSON.parse(data.data);
+
+		if (msg.type === 'ready') {
+			ready = true;
+			console.log('READY!');
+		} else if (msg.type === 'move') {
+			game.move(msg.data);
+
+			removeHighlights();
+			$board.find('.square-' + msg.data.from).addClass('highlight-move');
+			$board.find('.square-' + msg.data.to).addClass('highlight-move');
+			updatePosition(game.fen());
+		}
+	};
+
+	ws.onclose = () => {
+		console.log('CLOSE');
+		ready = false;
+	}
+} catch (err) {
+	document.querySelector('.main').innerHTML = err.toString();
+}
 
 /*
  * %%%%%%%%%%%%%%%%%%%%%%
@@ -122,6 +142,10 @@ function onDragStart(source, piece) {
 		return false;
 	}
 
+	if (game.turn() != color) {
+		return;
+	}
+
 	if (game.game_over()) {
 		return false;
 	}
@@ -134,12 +158,13 @@ function onDragStart(source, piece) {
 
 function onDrop(source, target) {
 	removeBackgrounds()
-
-	const move = game.move({
+	const moveObj = {
 		from: source,
 		to: target,
 		promotion: 'q' // TODO: Implement Promotion UI
-	});
+	}
+
+	const move = game.move(moveObj);
 
 	if (move == null) {
 		return 'snapback';
@@ -148,10 +173,27 @@ function onDrop(source, target) {
 	removeHighlights();
 	$board.find('.square-' + source).addClass('highlight-move');
 	$board.find('.square-' + target).addClass('highlight-move');
+
+	ws.send(JSON.stringify(
+		{
+			type: 'move',
+			id: id,
+			color: color,
+			data: moveObj
+		}
+	));
 }
 
 function onMouseoverSquare(square, piece) {
 	if (!ready) {
+		return;
+	}
+
+	if (game.turn() != color) {
+		return;
+	}
+
+	if (game.game_over()) {
 		return;
 	}
 

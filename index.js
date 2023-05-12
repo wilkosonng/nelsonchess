@@ -32,19 +32,20 @@ wss.on('connection', (ws, req) => {
 	*/ 
 	const socket = ws;
 
-	ws.on('message', (message) => {
+	socket.on('message', (message) => {
 		const obj = JSON.parse(message);
 		const { type, id, color, data } = obj;
 
 		if (id == null || !games.has(id)) {
-			ws.send('Game does not exist.');
+			socket.send('Game does not exist.');
 			return;
 		}
 
+		const game = games.get(id);
+
 		if (type === 'start') {
-			const game = games.get(id);
-			game[color] = ws;
-			info.set(ws, { color: color, id: id });
+			game[color] = socket;
+			info.set(socket, { color: color, id: id });
 			
 			if (game['w'] && game['b']) {
 				const readyMessage = JSON.stringify({ type: 'ready' });
@@ -52,19 +53,31 @@ wss.on('connection', (ws, req) => {
 				game['b'].send(readyMessage);
 			}
 		} else if (obj.type === 'move') {
-			// TODO
+			const gameInfo = info.get(socket);
+			const otherColor = color == 'w' ? 'b' : 'w';
+			const move = game.chess.move(data);
+
+			if (move) {
+				game[otherColor].send(JSON.stringify({ type: 'move', data: data }));
+			} else {
+				console.log('Invalid move!?');
+			}
 		} else {
 			// Unrecognized sequence
 		}
 	});
 
-	ws.on('close', () => {
-		const id = (info.get(socket)).id;
-		const game = games.get((info.get(socket)).id);
-		const otherColor = (info.get(socket)).color == 'w' ? 'b' : 'w';
-		info.delete(socket);
-		info.delete(game[otherColor]);
-		games.delete(id);
+	socket.on('close', () => {
+		const gameInfo = info.get(socket);
+		if (gameInfo) {
+			const id = gameInfo.id;
+			const game = games.get(id);
+			const otherColor = gameInfo.color == 'w' ? 'b' : 'w';
+			info.delete(socket);
+			info.delete(game[otherColor]);
+			games.delete(id);
+		}
+		console.log(info, games);
 	});
 });
 
@@ -130,12 +143,12 @@ app.post('/playRequest/:type', async (req, res) => {
 		return res.redirect(`/game/${id}/${color === 'black' ? 'b' : 'w'}`);
 	} else if (type === 'join') {
 		const { id } = req.body;
-		const res = games.get(id);
+		const game = games.get(id);
 
 		// Check if the game exists.
 		if (res) {
 			// Assign the joiner the correct piece color based on the creator's color.
-			if (res.w == null) {
+			if (game.w == null) {
 				return res.redirect(`/game/${id}/w`);
 			} else if (res.b == null) {
 				return res.redirect(`/game/${id}/b`);
@@ -153,9 +166,12 @@ app.post('/playRequest/:type', async (req, res) => {
 app.get('/game/:id/:color', (req, res) => {
 	const { id, color } = req.params;
 	if (games.has(id)) {
+		if (games.get(id)[color]) {
+			return res.send('Oops! Someone is already playing that color in that game!');
+		}
 		res.render(path.resolve(templates, 'game.ejs'));
 	} else {
-		res.send('Oops! Something went terribly wrong (cannot find game)!')
+		return res.send('Oops! Something went terribly wrong (cannot find game)!');
 	}
 });
 
