@@ -25,11 +25,13 @@ const portNumber = 5000;
 wss.on('connection', (ws, req) => {
 	/* WS Message Structure:
 	 * { type: start | move
-     *   id: id
+	 *   id: id
 	 *   color: b | w
 	 *   data: datum
 	 * }
-	*/ 
+	*/
+
+	// <3 JS contexts
 	const socket = ws;
 
 	socket.on('message', (message) => {
@@ -44,20 +46,23 @@ wss.on('connection', (ws, req) => {
 		const game = games.get(id);
 
 		if (type === 'start') {
+			// If a cleint asks to start, adds their websocket to the game.
 			game[color] = socket;
 			info.set(socket, { color: color, id: id });
 			
 			if (game['w'] && game['b']) {
+				// If both players have asked to start, readies their games.
 				const readyMessage = JSON.stringify({ type: 'ready' });
 				game['w'].send(readyMessage);
 				game['b'].send(readyMessage);
 			}
 		} else if (obj.type === 'move') {
-			const gameInfo = info.get(socket);
+			// If a player sends a move...
 			const otherColor = color == 'w' ? 'b' : 'w';
 			const move = game.chess.move(data);
 
 			if (move) {
+				// Validates the move. If it's valid, sends the move to the opponent.
 				game[otherColor].send(JSON.stringify({ type: 'move', data: data }));
 			} else {
 				console.log('Invalid move!?');
@@ -73,11 +78,17 @@ wss.on('connection', (ws, req) => {
 			const id = gameInfo.id;
 			const game = games.get(id);
 			const otherColor = gameInfo.color == 'w' ? 'b' : 'w';
+
+			if (game[otherColor]) {
+				// Closes the opponent as well, if applicable.
+				game[otherColor].close();
+			}
+
+			// Cleans up the local game cache.
 			info.delete(socket);
 			info.delete(game[otherColor]);
 			games.delete(id);
 		}
-		console.log(info, games);
 	});
 });
 
@@ -146,12 +157,14 @@ app.post('/playRequest/:type', async (req, res) => {
 		const game = games.get(id);
 
 		// Check if the game exists.
-		if (res) {
+		if (game) {
 			// Assign the joiner the correct piece color based on the creator's color.
 			if (game.w == null) {
 				return res.redirect(`/game/${id}/w`);
 			} else if (res.b == null) {
 				return res.redirect(`/game/${id}/b`);
+			// Here comes the long line of stuff that could go wrong.
+			// TODO: Implement better errors (i.e. error.ejs and render it with error message)
 			} else {
 				return res.send(`Oops! The lobby you're trying to join seems to be full! Try creating your own game!`);
 			}
@@ -203,6 +216,7 @@ process.stdin.on("readable", function () {
 	}
 });
 
+// Starts the server
 server.listen(portNumber, () => {
 	console.log(`Web server is running at http://localhost:${portNumber}`);
 	process.stdout.write('> ');
@@ -223,8 +237,9 @@ process.on('exit', async () => {
 	await client.close();
 });
 
+// Void -> Promise<String>
 // Generates a unique game ID
-// TODO: Bloom filter mayhaps?
+// TODO?: Bloom filter mayhaps?
 async function genID() {
 	const validChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 	let id = '';

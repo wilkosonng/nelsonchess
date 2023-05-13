@@ -12,8 +12,10 @@ const bwSquareLightBlue = '#9797d8';
 const nelsonWin = new Audio('/aud/nelson_win.mp3');
 const nelsonLose = new Audio('/aud/nelson_lose.mp3');
 const nelsonPanic = new Audio('/aud/nelson_panic.mp3');
+const nelsonInteresting = new Audio('/aud/nelson_interesting.mp3');
+const nelsonDepressed = new Audio('/aud/nelson_depress.mp3');
+const nelsonBegin = new Audio('/aud/nelson_begin.mp3');
 const pieceMove = new Audio('/aud/piece_move.mp3');
-const nelsonCheck = new Audio('/aud/nelson_panic.mp3');
 
 const match = (window.location.pathname).match(/\/(?<id>[a-zA-Z0-9]{8})\/(?<color>[bw])/);
 const id = match?.groups?.id;
@@ -38,7 +40,7 @@ try {
 		pieceTheme: '/img/chesspieces/nelsonchess/{piece}.png'
 	});
 
-	ws = new WebSocket(`wss://${window.location.host}`);
+	ws = new WebSocket(`${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}`);
 
 	ws.onopen = () => {
 		console.log('OPEN');
@@ -56,20 +58,22 @@ try {
 
 		if (msg.type === 'ready') {
 			ready = true;
+			nelsonBegin.play();
 			console.log('READY!');
 		} else if (msg.type === 'move') {
-			game.move(msg.data);
-
-			removeHighlights();
-			$board.find('.square-' + msg.data.from).addClass('highlight-move');
-			$board.find('.square-' + msg.data.to).addClass('highlight-move');
+			const moveObj = msg.data;
+			game.move(moveObj);
+			makeMove(moveObj);
 			updatePosition(game.fen());
 		}
 	};
 
-	ws.onclose = () => {
+	ws.onclose = (msg) => {
 		console.log('CLOSE');
+		console.log(msg);
 		ready = false;
+		document.querySelector('.main').innerHTML = 'Oof. Looks like your opponent bailed on you. Maybe you should re-evaluate your friendships.';
+		nelsonDepressed.play();
 	}
 } catch (err) {
 	document.querySelector('.main').innerHTML = err.toString();
@@ -171,9 +175,7 @@ function onDrop(source, target) {
 		return 'snapback';
 	}
 
-	removeHighlights();
-	$board.find('.square-' + source).addClass('highlight-move');
-	$board.find('.square-' + target).addClass('highlight-move');
+	makeMove(moveObj);
 
 	ws.send(JSON.stringify(
 		{
@@ -184,6 +186,10 @@ function onDrop(source, target) {
 		}
 	));
 }
+
+function onSnapEnd() {
+	updatePosition(game.fen());
+};
 
 function onMouseoverSquare(square, piece) {
 	if (!ready) {
@@ -215,12 +221,23 @@ function onMouseoutSquare(square, piece) {
 	removeBackgrounds();
 }
 
-function onSnapEnd() {
-	updatePosition(game.fen());
-};
-
 function updatePosition(fen) {
 	pieceMove.play();
 	board.position(fen);
 	highlightCheck();
+}
+
+/*
+ * %%%%%%%%%%%%%%%%%%%%
+ * Chessboard Functions
+ * %%%%%%%%%%%%%%%%%%%%
+*/
+
+function makeMove(moveObj) {
+	removeHighlights();
+	$board.find('.square-' + moveObj.from).addClass('highlight-move');
+	$board.find('.square-' + moveObj.to).addClass('highlight-move');
+	if (Math.random() < 0.05) {
+		nelsonInteresting.play();
+	}
 }
