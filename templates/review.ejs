@@ -6,19 +6,26 @@
   <%- include('fonts'); -%>
     <title>Review | Nelsonchess</title>
     <link rel="stylesheet" href="/style/default.css" />
+    <script src="/js/reviewBoard.js" defer></script>
 </head>
 
 <body>
   <%- include('header'); -%>
     <div class="main">
       <div class="center">
-        <form action="/playRequest/create" method="get">
-          <fieldset>
+        <%- include('board'); -%>
+          <div id="navButtons">
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+          </div>
+      </div>
+      <div class="sidebar">
 
-          </fieldset>
-        </form>
+      </div>
+      <%- include('footer'); -%>
     </div>
-  <%- include('footer'); -%>
 </body>
 
 </html>

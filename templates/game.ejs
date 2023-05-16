@@ -5,26 +5,30 @@
 	<meta charset="utf-8" />
 	<title>Game | Nelsonchess</title>
 	<%- include('fonts'); -%>
-		<link rel="stylesheet" href="/style/default.css" type="text/css" />
-		<script type="module" src="/js/gameBoard.js" defer></script>
+	<link rel="stylesheet" href="/style/default.css" type="text/css" />
+	<script src="/js/gameBoard.js" defer></script>
 </head>
 
 <body>
 	<%- include('header'); -%>
-		<div class="main">
+		<div class="main" style="margin-top: 5rem">
 			<div class="center">
-				Opponent
-
+				<h3 id="oppName">Waiting for opponent...</h3>
 				<br>
 				<%- include('board'); -%>
-				<br>
-
-				You
+					<br>
+					<h3 id="yourName">You</h3>
 			</div>
-			<div class="Sidebar">
-				Yeehaw!
+			<div class="sidebar">
+				<h2>Lobby Info</h2>
+				<div id="sidebarInfo">
+					<p id="lobbyCode"></p>
+					<button id="copyButton">📋</button>
+					<p id="lobbyFeedback" hidden>Lobby code copied!</p>
+				</div>
 			</div>
-		</div> <%- include('footer'); -%> <%- include('chess'); -%>
+			<%- include('footer'); -%>
+		</div> <%- include('chess'); -%>
 </body>
 
 </html>

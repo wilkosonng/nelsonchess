@@ -22,9 +22,9 @@
               <label for="black">Black</label>
               <input id="random" name="color" type="radio" value="random" checked>
               <label for="random">Random</label>
-              <br>
-              <br>
-              <button id="createButton" type="submit">Create Game</button>
+              <div class="buttonContainer">
+                <button id="createButton" type="submit">Create Game</button>
+              </div>
           </fieldset>
         </form>
         <br>
@@ -32,14 +32,16 @@
           <fieldset>
             <h2>Join a Game</h1>
               <h3>Game ID</h3>
-              <input id="id" name="id" type="text" placeholder="ABCDEFGH" required>
+              <input id="id" name="id" type="text" maxlength="8" required>
               <br>
               <br>
-              <button id="joinButton" type="submit">Join Game</button>
+              <div class="buttonContainer">
+                <button id="joinButton" type="submit">Join Game</button>
+              </div>
           </fieldset>
       </div>
+      <%- include('footer'); -%>
     </div>
-    <%- include('footer'); -%>
 </body>
 
 </html>

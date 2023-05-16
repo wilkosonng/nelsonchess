@@ -63,6 +63,18 @@ wss.on('connection', (ws, req) => {
 
 			if (move) {
 				// Validates the move. If it's valid, sends the move to the opponent.
+				if (game.chess.isGameOver()) {
+					// Further, if the game ends, logs the game.
+					collection.insertOne({ id: id, game: {} });
+					// Closes the websocket if it hasn't already been closed.
+					if (game?.w) {
+						game?.w.close();
+					}
+					
+					game[otherColor].send(JSON.stringify({ type: 'move', data: data }));
+					return;
+				}
+
 				game[otherColor].send(JSON.stringify({ type: 'move', data: data }));
 			} else {
 				console.log('Invalid move!?');
@@ -105,6 +117,8 @@ const client = new MongoClient(uri, {
 	}
 });
 
+const collection = client.db('Cluster0').collection('Games');
+
 process.stdin.setEncoding('utf8');
 const templates = path.resolve(__dirname, 'templates');
 
@@ -120,8 +134,6 @@ async () => {
 		process.exit(1);
 	}
 };
-
-const collection = client.db('Cluster0').collection('Games');
 
 // Adds request handlers
 app.get('/', (req, res) => {
@@ -196,10 +208,6 @@ app.get('/about', (req, res) => {
 	res.render(path.resolve(templates, 'about.ejs'));
 });
 
-app.get('/test', (req, res) => {
-	res.render(path.resolve(templates, 'test.ejs'));
-});
-
 // Implements command line interpreter
 
 process.stdin.on("readable", function () {
@@ -237,7 +245,6 @@ process.on('exit', async () => {
 	await client.close();
 });
 
-// Void -> Promise<String>
 // Generates a unique game ID
 // TODO?: Bloom filter mayhaps?
 async function genID() {
