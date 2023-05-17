@@ -51,7 +51,11 @@ button:hover {
 }
 
 .center {
-	width: 500px
+	width: 500px;
+}
+
+.reviewCenter {
+	width: 600px;
 }
 
 .sidebar {
@@ -164,4 +168,13 @@ input[type="radio"] {
 	border: 4px solid #222222;
 	font-size: 1.2rem;
 	text-align: center;
+}
+
+#navButtons {
+	display: flex;
+	justify-content: space-evenly;
+	background-color: #444444;
+	border: 4px solid #222222;
+	border-radius: 1.5rem;
+	margin-top: 1rem;
 }

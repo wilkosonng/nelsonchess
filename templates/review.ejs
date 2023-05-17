@@ -11,21 +11,29 @@
 
 <body>
   <%- include('header'); -%>
-    <div class="main">
-      <div class="center">
+    <div class="main" style="margin-top: 5rem">
+      <div class="reviewCenter">
         <%- include('board'); -%>
           <div id="navButtons">
-            <button></button>
-            <button></button>
-            <button></button>
-            <button></button>
+            <button id="startButton">Start</button>
+            <button id="previousButton">Previous</button>
+            <button id="reverseButton"> ⟳</button>
+            <button id="nextButton">Next</button>
+            <button id="endButton">End</button>
           </div>
       </div>
-      <div class="sidebar">
-
+      <div id="gameLoader" class="sidebar">
+        <h2>Import Game</h2>
+          <h3>Game ID</h3>
+          <input id="id" name="id" type="text" maxlength="8" required>
+          <br>
+          <div class="buttonContainer">
+            <button id="loadButton">Load Game</button>
+          </div>
+          <p id="feedback" hidden>Lobby code copied!</p>
       </div>
       <%- include('footer'); -%>
-    </div>
+    </div> <%- include('chess'); -%>
 </body>
 
 </html>

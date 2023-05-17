@@ -64,14 +64,14 @@ wss.on('connection', (ws, req) => {
 			if (move) {
 				// Validates the move. If it's valid, sends the move to the opponent.
 				if (game.chess.isGameOver()) {
-					// Further, if the game ends, logs the game.
-					collection.insertOne({ id: id, game: {} });
+					// Further, if the game ends, logs the game with Portable Game Notation.
+					collection.insertOne({ id: id, game: game.chess.pgn() });
+					game[otherColor].send(JSON.stringify({ type: 'move', data: data }));
+
 					// Closes the websocket if it hasn't already been closed.
 					if (game?.w) {
 						game?.w.close();
 					}
-					
-					game[otherColor].send(JSON.stringify({ type: 'move', data: data }));
 					return;
 				}
 
@@ -123,7 +123,7 @@ process.stdin.setEncoding('utf8');
 const templates = path.resolve(__dirname, 'templates');
 
 // Attempts to connect to Atlas
-async () => {
+(async () => {
 	try {
 		await client.connect();
 		await client.db("admin").command({ ping: 1 });
@@ -133,7 +133,7 @@ async () => {
 		console.dir(err);
 		process.exit(1);
 	}
-};
+})();
 
 // Adds request handlers
 app.get('/', (req, res) => {
@@ -208,8 +208,21 @@ app.get('/about', (req, res) => {
 	res.render(path.resolve(templates, 'about.ejs'));
 });
 
-// Implements command line interpreter
+// Endpoint for game requests.
+// Returns a PGN string; else, returns the empty string.
+app.get('/api/requestGame', async (req, res) => {
+	const id = req?.query?.id;
+	console.log(id);
+	if (id && id.match(/[a-zA-Z0-9]{8}/)) {
+		const doc = await collection.findOne({ id: id });
+		if (doc?.game) {
+			return res.send(doc.game);
+		}
+	}
+	res.send('');
+});
 
+// Implements command line interpreter
 process.stdin.on("readable", function () {
 	let dataInput = process.stdin.read();
 	if (dataInput !== null) {

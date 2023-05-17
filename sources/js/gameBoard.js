@@ -170,12 +170,12 @@ function onDragStart(source, piece) {
 }
 
 function onDrop(source, target) {
-	removeBackgrounds()
+	removeBackgrounds();
 	const moveObj = {
 		from: source,
 		to: target,
 		promotion: 'q' // TODO: Implement Promotion UI
-	}
+	};
 
 	const move = game.move(moveObj);
 
@@ -270,7 +270,7 @@ function endGame() {
 		} else {
 			nelsonLose.play();
 		}
-		sidebar.innerHTML = `<p>Result: ${winner === 'w' ? 'Black' : 'White'} Wins!</p><br><p>Review game with code: ${id}</p>`;
+		sidebar.innerHTML = `<p>Result: ${winner === 'w' ? 'Black' : 'White'} wins!</p><br><p>Review game with code: ${id}</p>`;
 	}
 }
 
