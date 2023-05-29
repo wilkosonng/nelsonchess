@@ -31,8 +31,7 @@ wss.on('connection', (ws, req) => {
 	 * }
 	*/
 
-	// <3 JS contexts
-	const socket = ws;
+	const socket = ws; 	// <3 JS contexts
 
 	socket.on('message', (message) => {
 		const obj = JSON.parse(message);

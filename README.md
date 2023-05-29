@@ -16,3 +16,5 @@ Nelsonchess is a chess web application that combines everything you love about N
 | Has Nelson | ❌      | ✔          |
 
 We think it's clear which service is superior.
+
+You may find the latest instance instance of Nelsonchess hosted on [Render](https://nelsonchess.onrender.com).
